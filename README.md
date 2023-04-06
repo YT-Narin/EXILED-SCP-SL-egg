@@ -6,24 +6,21 @@ A pterodactyl egg for SCP:SL that has [EXILED](https://github.com/Exiled-Team/EX
 
 Features:
 
-- Beta tag support
-- EXILED
-- Select pre-release or release of EXILED
-- Specific EXILED version support
-- Discord integration bot and plugin
-- Localadmin
-- Automiatically checks if the egg is up to date and notifys you when there is an update.
-- Auto Admintools install
-- Auto Common Utilities install.
-- Auto SCPStats install.
-- Automatically install and update any plugin you put in. (Including private repositories)
-- Exiled updater auto-removal
-- FFmpeg (for use with [CommsHack](https://github.com/VirtualBrightPlayz/CommsHack))
+- Beta tag support.
+- EXILED support.
+- Option to choose the pre-release or release of EXILED.
+- Specific EXILED version support.
+- Discord Integration support.
+- SCPDiscord support.
+- Automiatically checks if the egg is up to date and notifies you when there is an update.
+- Automatically install and update any plugin you put in (Including private repositories).
+- Exiled updater auto-removal.
+- FFmpeg support (for use with audio player plugins).
 
 ## Using the automatic plugin installer
 
-Located in the `.egg/` directory if you enabled "AUTO INSTALL CUSTOM PLUGINS?" there should a file called `customplugins.txt`.
-You can put the Github link to any plugin in there, one per line but it must be in the correct format for it to work.
+When you enable the "Install Custom Plugins" variable in the startup tab and after installation go to the `.egg` file in your root directory and you will see a file called `customplugins.txt`
+You can put the Github link to any plugin in there, one per line but it must be in the correct format (see below) for it to work.
 
 ### Format
 ```
