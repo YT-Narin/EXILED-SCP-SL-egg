@@ -18,14 +18,12 @@ $(tput setaf 0)
 "
 
 echo "
-$(tput setaf 2)This installer was created by $(tput setaf 1)Parkeymon#0001$(tput setaf 0) , and modified by Esser#2006.
+$(tput setaf 2)This installer was created by $(tput setaf 1)Parkeymon#0001$(tput setaf 0) and maintained by EsserGaming.
 "
 
 # Egg version checking, do not touch!
 currentVersion="2.4.0"
 latestVersion=$(curl --silent "https://api.github.com/repos/Parkeymon/EXILED-SCP-SL-egg/releases/latest" | jq -r .tag_name)
-# Default port is 9000 so 7777 + 1223 = 9000 and when you have more servers each port is one more.
-#botPort=$((SERVER_PORT + 1223))
 
 if [ "${currentVersion}" == "${latestVersion}" ]; then
   echo "$(tput setaf 2)Installer is up to date"
@@ -40,11 +38,8 @@ else
   $(tput setaf 3)Please update to the latest version found here: https://github.com/Parkeymon/EXILED-SCP-SL-egg/releases/latest
 
   "
-  sleep 5
+  sleep 10
 fi
-
-#install zip-unzip
-apt install zip unzip
 
 # Download SteamCMD and Install
 cd /tmp || {
@@ -70,13 +65,13 @@ else
   ./steamcmd.sh +force_install_dir /mnt/server +login anonymous +app_update "${SRCDS_APPID}" -beta ${BETA_TAG} validate +quit
 fi
 
-
 # Install SL with SteamCMD
 cd /mnt/server || {
   echo "$(tput setaf 1) FAILED TO MOUNT TO /mnt/server"
   exit
 }
 
+#Start egg configuration
 mkdir .egg
 
 echo "$(tput setaf 4)Configuring start.sh$(tput setaf 0)"
@@ -84,49 +79,78 @@ rm ./.egg/start.sh
 touch "./.egg/start.sh"
 chmod +x ./.egg/start.sh
 
-if [ "${INSTALL_SCPDI}" == "true" ]; then
+if [ "${INSTALL_DIBOT}" == "true" ]; then
   echo "#!/bin/bash
-    ./SCPDiscordBot_Linux &
-    ./SecretAdmin ${SERVER_PORT}" >>./.egg/start.sh
-  echo "$(tput setaf 4)Finished configuring start.sh for SecretAdmin and SCP Discord.$(tput setaf 0)"
+    ./.egg/DIBot/DiscordIntegration.Bot > /dev/null &
+    ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
+  echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and Discord Integration.$(tput setaf 0)"
+
+elif [ "${INSTALL_SCPBOT}" == "true" ]; then
+  echo "#!/bin/bash
+    ./.egg/SCPDBot/SCPDiscordBot_Linux &
+    ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
+  echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and SCP Discord.$(tput setaf 0)"
 
 else
   echo "#!/bin/bash
-    ./SecretAdmin \${SERVER_PORT}" >>./.egg/start.sh
-  echo "$(tput setaf 4)Finished configuring start.sh for SecretAdmin.$(tput setaf 0)";
+    ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
+  echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin.$(tput setaf 0)"
 
 fi
+# Install Discord Integration Bot
+if [ "${INSTALL_DIBOT}" == "true" ]; then
+  mkdir /mnt/server/.egg/DIBot
+  echo "Removing old Discord Integration"
+  rm /mnt/server/.egg/DIBot/DiscordIntegration.Bot
+  echo "$(tput setaf 4)Installing latest Discord Integration bot version."
+  wget -q https://github.com/Exiled-Team/DiscordIntegration/releases/latest/download/DiscordIntegration.Bot -P /mnt/server/.egg/DIBot
 
-if [ "${INSTALL_SCPDI}" == "true" ]; then
-  mkdir /mnt/server/.egg/SCPDiscordBot
+  chmod +x /mnt/server/.egg/DIBot/DiscordIntegration.Bot
 
-  echo "$(tput setaf 4)Installing latest SCPDiscord bot version."
-  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/download/3.0.0-ALPHA3/SCPDiscordBot_Linux -P /mnt/server/.egg/SCPDiscordBot
+# Install Discord Integration Plugin
+  echo "Installing Latest Discord Integration Plugin.."
 
-  chmod +x /mnt/server/.egg/SCPDiscordBot/SCPDiscordBot_Linux
-  
-  echo "$(tput setaf 4)Removing Old SCPDiscord Bot.$(tput setaf 0)"; 
-  rm /mnt/server/.egg/SCPDiscordBot_Linux.1
+  echo "Removing old Discord Integration"
+  rm /mnt/server/.config/EXILED/Plugins/DiscordIntegration.dll
 
-#  yq -i ".TcpServers.1.Port = \"${botPort}\"" /mnt/server/DiscordIntegration-config.json
-#  echo "$(tput setaf 5)Automatically setting bot port in bot configs as ${botPort}"
+  echo "$(tput setaf 5)Grabbing plugin and dependencies."
+  wget -q https://github.com/Exiled-Team/DiscordIntegration/releases/latest/download/Plugin.tar.gz -P /mnt/server/.config/EXILED/Plugins
 
-#  if [ "${BOT_TOKEN}" == "none" ]; then
-#    echo "$(tput setaf 4)Bot token is not set! Skipping auto configuration.$(tput setaf 0)"
-#  else
-#    yq -i ".BotTokens.1 = \"${BOT_TOKEN}\"" /mnt/server/DiscordIntegration-config.json
-#    echo "$(tput setaf 5)Automatically setting bot token in bot configs."
-#  fi
-#
-#  if [ "${DISCORD_ID}" == "none" ]; then
-#    echo "$(tput setaf 4)Discord server ID is not set! Skipping auto configuration.$(tput setaf 0)"
-#  else
-#    yq -i ".DiscordServerIds.1 = \"${DISCORD_ID}\"" /mnt/server/DiscordIntegration-config.json
-#    echo "$(tput setaf 5)Automatically setting bot port in bot configs as ${DISCORD_ID}"
-#  fi
+  echo "Extracting..."
+  tar xzvf /mnt/server/.config/EXILED/Plugins/Plugin.tar.gz -C /mnt/server/.config/EXILED/Plugins
+  rm /mnt/server/.config/EXILED/Plugins/Plugin.tar.gz
 
 else
-  echo "$(tput setaf 4)Skipping bot install...$(tput setaf 0)"
+  echo "Skipping Discord Integration install."
+fi
+#Install SCPDiscord Bot
+if [ "${INSTALL_SCPBOT}" == "true" ]; then
+  mkdir /mnt/server/.egg/SCPDBot
+
+  echo "Removing old SCPDiscord Bot"
+  rm /mnt/server/.egg/SCPDBot/SCPDiscordBot_Linux
+
+  echo "$(tput setaf 4)Installing latest SCP Discord Bot."
+  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/latest/download/SCPDiscordBot_Linux -P /mnt/server/.egg/SCPDBot
+
+  chmod +x /mnt/server/.egg/SCPDBot/SCPDiscordBot_Linux
+
+ #Install SCPDiscord Plugin
+  echo "Installing Latest SCP Discord Plugin.."
+
+  echo "Removing old SCPDiscord Plugin"
+  rm '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/SCPDiscord.dll'
+
+  echo "$(tput setaf 5)Grabbing plugin and dependencies."
+  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/latest/download/dependencies.zip -P '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global'
+  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/latest/download/SCPDiscord.dll -P '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global'
+
+
+  echo "Extracting dependencies..."
+  unzip -oq '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/dependencies.zip' -d '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/'
+  rm '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/dependencies.zip'
+else
+  echo "Skipping SCPDiscord install."
 fi
 
 if [ "${INSTALL_EXILED}" == "true" ]; then
@@ -161,54 +185,6 @@ else
   echo "Skipping EXILED updater removal."
 fi
 
-if [ "${INSTALL_SCPDI}" == "true" ]; then
-  echo "Installing Latest SCPDiscord Plugin..."
-
-  echo "Removing old the SCPDiscord plugin"
-  rm '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/SCPDiscord.dll'
-
-  echo "$(tput setaf 5)Grabbing plugin and dependencies."
-  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/download/3.0.0-ALPHA3/dependencies.zip -P '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/'
-  wget -q https://github.com/KarlOfDuty/SCPDiscord/releases/download/3.0.0-ALPHA3/SCPDiscord.dll -P '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/'
-
-  echo "Extracting..."
-  unzip -qo '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/dependencies.zip' -C '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/'
-  rm '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/dependencies.zip'
-
-#  if [ -f "/mnt/server/.config/EXILED/Configs/${SERVER_PORT}-config.yml" ]; then
-#        echo "Exiled config exists, no need to create"
-#    else
-#      mkdir /mnt/server/.config/EXILED/Configs
-#      touch /mnt/server/.config/EXILED/Configs/"${SERVER_PORT}"-config.yml
-#      echo "Exiled config did not exist and was generated."
-#  fi
-
-#  chmod 777 /mnt/server/.config/EXILED/Configs/"${SERVER_PORT}"-config.yml
-#  yq -i ".discord_integration.bot.port = \"${botPort}\"" /mnt/server/.config/EXILED/Configs/"${SERVER_PORT}-config.yml"
-#  echo "$(tput setaf 5)Automatically setting bot port in server configs as ${botPort}"
-
-else
-  echo "Skipping Discord integration plugin install"
-fi
-
-if [ "${INSTALL_ADMINTOOLS}" == "true" ]; then
-  echo "Removing existing Admin Tools version."
-  rm .config/EXILED/Plugins/AdminTools.dll
-  echo "$(tput setaf 5)Installing latest Admin Tools"
-  wget -q https://github.com/Exiled-Team/AdminTools/releases/latest/download/AdminTools.dll -P /mnt/server/.config/EXILED/Plugins
-
-else
-  echo "Skipping Admin Tools install."
-fi
-
-if [ "${INSTALL_UTILITIES}" == "true" ]; then
-  echo "Removing existing Common Utilities version."
-  rm .config/EXILED/Plugins/Common_Utilities.dll
-  echo "$(tput setaf 5)Installing Common Utilities."
-  wget -q https://github.com/Exiled-Team/Common-Utils/releases/latest/download/Common_Utilities.dll -P /mnt/server/.config/EXILED/Plugins
-else
-  echo "Skipping Common Utilities Install"
-fi
 
 function installPlugin() {
   # Caches the plugin to a json so only one request to Github is needed
@@ -249,18 +225,6 @@ if [ "${INSTALL_CUSTOM}" == "true" ]; then
     installPlugin "${I}"
   done
 
-fi
-
-
-if [ "${INSTALL_SECRETADMIN}" == "true" ]; then
-  echo "Removing existing Secret Admin version."
-  rm SecretAdmin.1
-  echo "$(tput setaf 5)Installing Secret Admin."
-  wget -q https://github.com/Jesus-QC/SecretAdmin/releases/latest/download/SecretAdmin -P /mnt/server/
-  echo "Setting permission 777 for Secret Admin."
-  chmod 777 /mnt/server/SecretAdmin
-else
-  echo "Skipping Secret Admin Install"
 fi
 
 echo "$(tput setaf 2)Installation Complete!$(tput sgr 0)"

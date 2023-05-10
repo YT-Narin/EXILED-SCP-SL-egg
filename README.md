@@ -2,7 +2,7 @@
 [![wakatime](https://wakatime.com/badge/github/Parkeymon/EXILED-SCP-SL-egg.svg)](https://wakatime.com/badge/github/Parkeymon/EXILED-SCP-SL-egg)
 [![Trigger: Push action](https://github.com/Parkeymon/EXILED-SCP-SL-egg/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Parkeymon/EXILED-SCP-SL-egg/actions/workflows/shellcheck.yml)
 
-A pterodactyl egg for SCP:SL that has [EXILED](https://github.com/Exiled-Team/EXILED) support.
+A pterodactyl egg for SCP:SL that has [EXILED](https://github.com/Exiled-Team/EXILED) support plus some extra features.
 
 Features:
 
@@ -21,6 +21,8 @@ Features:
 
 When you enable the "Install Custom Plugins" variable in the startup tab and after installation go to the `.egg` file in your root directory and you will see a file called `customplugins.txt`
 You can put the Github link to any plugin in there, one per line but it must be in the correct format (see below) for it to work.
+
+Note: This will not work for NWApi plugins, though there is a way to automatically install/update plugins using Northwood's built in plugin manager which you can access by using the `p` command.
 
 ### Format
 ```
