@@ -89,7 +89,7 @@ elif [ "${INSTALL_SCPBOT}" == "true" ]; then
   echo "#!/bin/bash
     ./.egg/SCPDBot/SCPDiscordBot_Linux ./.egg/SCPDBot/config.yml &
     ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
-  echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and SCP Discord.$(tput setaf 0)"
+  echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and SCPDiscord.$(tput setaf 0)"
 
 else
   echo "#!/bin/bash
