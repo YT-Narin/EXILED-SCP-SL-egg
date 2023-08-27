@@ -38,7 +38,7 @@ else
   $(tput setaf 3)Please update to the latest version found here: https://github.com/EsserGaming/EXILED-SCP-SL-egg/releases/latest
 
   "
-  sleep 10
+  sleep 5
 fi
 
 # Download SteamCMD and Install
@@ -87,7 +87,7 @@ if [ "${INSTALL_DIBOT}" == "true" ]; then
 
 elif [ "${INSTALL_SCPBOT}" == "true" ]; then
   echo "#!/bin/bash
-    ./.egg/SCPDBot/SCPDiscordBot_Linux &
+    ./.egg/SCPDBot/SCPDiscordBot_Linux ./.egg/SCPDBot/config.yml &
     ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
   echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and SCP Discord.$(tput setaf 0)"
 
@@ -136,8 +136,6 @@ if [ "${INSTALL_SCPBOT}" == "true" ]; then
   chmod +x /mnt/server/.egg/SCPDBot/SCPDiscordBot_Linux
 
  #Install SCPDiscord Plugin
-  echo "Installing Latest SCP Discord Plugin.."
-
   echo "Removing old SCPDiscord Plugin"
   rm '/mnt/server/.config/SCP Secret Laboratory/PluginAPI/plugins/global/SCPDiscord.dll'
 
@@ -228,6 +226,7 @@ if [ "${INSTALL_CUSTOM}" == "true" ]; then
 fi
 
 # Cleanup :p
+echo "$(tput setaf 2)Cleaning up...$(tput sgr 0)"
 rm /mnt/server/core
 rm /mnt/server/Exiled.Installer-Linux
 rm -rf /mnt/server/?
