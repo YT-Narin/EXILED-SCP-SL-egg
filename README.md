@@ -1,6 +1,8 @@
 # EXILED-SCP-SL-egg
 [![Trigger: Push action](https://github.com/EsserGaming/EXILED-SCP-SL-egg/actions/workflows/workflow.yml/badge.svg?branch=master)](https://github.com/EsserGaming/EXILED-SCP-SL-egg/actions/workflows/workflow.yml)
 
+# ⚠️This is a fork of [Parkeymon's Repository](https://github.com/Parkeymon/EXILED-SCP-SL-egg)
+
 A pterodactyl egg for SCP:SL that has [EXILED](https://github.com/Exiled-Team/EXILED) support plus some extra features.
 
 Features:
