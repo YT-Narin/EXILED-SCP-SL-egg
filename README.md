@@ -17,7 +17,7 @@ Features:
 - FFmpeg support (for use with audio player plugins).
 - ~~Option to remove the EXILED auto updater~~
  - The auto updater is no longer a plugin, so therefore there currently isn't a way to remove it through Pterodactyl.
- - You can turn it off manually in `/home/container/.config/SCP Secret Laboratory/PluginAPI/plugins/global/Exiled Loader/config.yml ` and set `enable_auto_updates:` to `false`.
+ - You can turn it off manually in `/home/container/.config/SCP Secret Laboratory/PluginAPI/plugins/global/Exiled Loader/config.yml` and set `enable_auto_updates:` to `false`.
 
 ## Custom Plugin installing 
 This function is currently not functioning properly and isn't being worked on at the moment, so the documentation has been moved over [here](https://github.com/EsserGaming/EXILED-SCP-SL-egg/blob/master/CustomPlugins.md).
