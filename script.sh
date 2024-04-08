@@ -22,7 +22,7 @@ $(tput setaf 2)This installer was created by $(tput setaf 1)Parkeymon$(tput seta
 "
 
 # Egg version checking, do not touch!
-currentVersion="2.5.3"
+currentVersion="2.5.4"
 latestVersion=$(curl --silent "https://api.github.com/repos/EsserGaming/EXILED-SCP-SL-egg/releases/latest" | jq -r .tag_name)
 
 if [ "${currentVersion}" == "${latestVersion}" ]; then
@@ -87,7 +87,7 @@ if [ "${INSTALL_DIBOT}" == "true" ]; then
 
 elif [ "${INSTALL_SCPBOT}" == "true" ]; then
   echo "#!/bin/bash
-    ./.egg/SCPDBot/SCPDiscordBot_Linux ./.egg/SCPDBot/config.yml &
+    ./.egg/SCPDBot/SCPDiscordBot_Linux --config ./.egg/SCPDBot/config.yml &
     ./LocalAdmin \${SERVER_PORT}" >>./.egg/start.sh
   echo "$(tput setaf 4)Finished configuring start.sh for LocalAdmin and SCPDiscord.$(tput setaf 0)"
 
