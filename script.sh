@@ -22,7 +22,7 @@ $(tput setaf 2)This installer was created by $(tput setaf 1)Parkeymon$(tput seta
 "
 
 # Egg version checking, do not touch!
-currentVersion="2.5.4"
+currentVersion="2.5.5"
 latestVersion=$(curl --silent "https://api.github.com/repos/EsserGaming/EXILED-SCP-SL-egg/releases/latest" | jq -r .tag_name)
 
 if [ "${currentVersion}" == "${latestVersion}" ]; then
@@ -176,57 +176,9 @@ else
   echo "Skipping Exiled installation."
 fi
 
-if [ "${REMOVE_UPDATER}" == "true" ]; then
-  echo "Removing Exiled updater."
-  rm /mnt/server/.config/EXILED/Plugins/Exiled.Updater.dll
-else
-  echo "Skipping EXILED updater removal."
-fi
-
-
-function installPlugin() {
-  # Caches the plugin to a json so only one request to Github is needed
-  curl --silent -u "${GITHUB_USERNAME}:${GITHUB_TOKEN}" "$1" | jq . > plugin.json
-
-  if [ "$(jq -r .assets[0].browser_download_url plugin.json)" == null ]; then
-    echo "
-    $(tput setaf 5)ERROR GETTING PLUGIN DOWNLOAD URL!
-
-    Inputted URL: $1
-
-    You likely inputted the incorrect URL or have been rate-limited ( https://takeb1nzyto.space/ )
-    "
-
-  fi
-
-  echo "$(tput setaf 5)Installing $(jq -r .assets[0].name plugin.json) $(jq -r .tag_name plugin.json) by $(jq -r .author.login plugin.json)"
-
-  # For the evil people that put the version in their plugin name the old version will need to be manually deleted
-  rm /mnt/server/.config/EXILED/Plugins/"$(jq -r .assets[0].name plugin.json)"
-
-  jq -r .assets[0].browser_download_url plugin.json
-
-  if [ "${GITHUB_TOKEN}" == "none" ]; then
-    wget -q "$(jq -r .assets[0].browser_download_url plugin.json)" -P /mnt/server/.config/EXILED/Plugins
-  else
-    url=$(jq -r .assets[0].url plugin.json | sed "s|https://|https://${GITHUB_TOKEN}:@|")
-    wget -q --auth-no-challenge --header='Accept:application/octet-stream' "$url" -O /mnt/server/.config/EXILED/Plugins/"$(jq -r .assets[0].name plugin.json)"
-  fi
-
-  rm plugin.json
-}
-
-if [ "${INSTALL_CUSTOM}" == "true" ]; then
-  touch /mnt/server/.egg/customplugins.txt
-
-  grep -v '^ *#' </mnt/server/.egg/customplugins.txt | while IFS= read -r I; do
-    installPlugin "${I}"
-  done
-
-fi
 
 # Cleanup :p
-echo "$(tput setaf 2)Cleaning up...$(tput sgr 0)"
+echo "$(tput setaf 2)Cleaning up..$(tput sgr 0)"
 rm /mnt/server/core
 rm /mnt/server/Exiled.Installer-Linux
 rm -rf /mnt/server/?
