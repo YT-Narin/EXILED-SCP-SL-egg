@@ -1,7 +1,7 @@
 > [!Note]
 > **This is a fork of [Parkeymon's Repository](https://github.com/Parkeymon/EXILED-SCP-SL-egg)**
 # EXILED-SCP-SL-egg
-**A Pterodactyl egg for SCP:Secret Laboratory that has [EXILED](https://github.com/Exiled-Team/EXILED) support plus some extra features.**
+**A Pterodactyl egg for SCP: Secret Laboratory that supports EXILED installation, and more.**
 
 ## Features:
 - Beta tag support.
