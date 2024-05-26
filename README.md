@@ -43,4 +43,4 @@
 [![Server Image](https://github.com/YT-Narin/docker-scpsl/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/EsserGaming/docker-scpsl/actions/workflows/docker-image.yml)
 
 ### Script Container
-[![Script Container](https://github.com/EYT-Narin/scpsl-install-docker/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/EsserGaming/scpsl-install-docker/actions/workflows/docker-image.yml)
+[![Script Container](https://quay.io/repository/narin4ik/scpsl-install/status "Docker Repository on Quay")](https://quay.io/repository/narin4ik/scpsl-install)
